@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>ECMAScript-신규변수사용법 (const/let)</h1>
+
+    <script>
+        // var : 전통적인(올드한) 변수선언 예약어
+        var userName = "노윤석";
+        var age = 20;
+
+        //기본상품 가격
+        var price = 5000;
+        var isMale = true;
+
+        // 기본배송비 설정
+        // 비지니스규칙 : 기본배송비는 한번 값이 할당되면 변경이 안되어야 한다.(상수)
+        var baseDelyFee = 3000;
+        console.log("기본배송비 var: ", baseDelyFee);
+        
+        baseDelyFee = 5000;
+        //console은 웹브라우저 개발자도구내 콘솔앱에 로그를 찍는 기능입니다.
+        console.log("기본배송비 var: ", baseDelyFee);
+
+        //var 로 선언된 변수는 상수개념이 없어서 언제든지 값을 변경할 수 있다.
+        //그래서 2015년도(ES6=ES2015)에 const/let 이라는 신규변수선언 예약어가 추가되었다.
+
+        //const 상수를 이용해 값을 할당해봅시다.
+        const newBaseDelyFee = 3000;
+        
+
+        //newaseDelyFee = 5000; //에러발생
+
+        console.log("기본배송비 const: ", newBaseDelyFee);
+
+        //총결제금액
+        let totlaPrice = 0;
+
+        console.log("총결제금액 let: ", totlaPrice);
+
+        totlaPrice += newBaseDelyFee;
+
+        //총결제 비용에 기본상품가격 추가
+        totlaPrice += price;
+
+        console.log("총결제금액 let: ", totlaPrice);
+
+        //var 와 let/const 와의 큰차이는 블록스코프를 준수합니다.
+        //블록스코프는 if/for 구문 블럭내에서 변수/상수가 선언되면 그안에서만 사용되어야하는데
+        //var는 밖에서도 사용이 가능한 문제점을 개선하는 방법입니다.
+
+        const region = '제주도';
+
+        //if 구문(여기가 블록스코프-가정문 범위)
+        //프로그래밍시 if/for 등 특정영역내에서 선언된 변수는 그 범위내에서만 사용이 되어야 정상이지만
+        //var는 해당 범위 밖에서도 호출 및 사용이 가능하다(에러발생원인제공)
+        
+        if(region == '제주도'){
+            //원래 if/for (블록내에서 선언된 변수는 그안에서만 사용하기 위해 선언한 것인데)
+            //선언된 블록 외부에서 사용하면 에러를 발생시킬 여지가 커짐(안좋음)
+            var alertMsg = '제주도는 배송비가 추가됩니다.';    
+        }
+        
+        //var는 블록스코프 밖에서도 사용이 가능하다. : 이런게 문제이다
+        //이점을 개선하기 위해 let/const 가 등장했다.
+        //console.log("alertMsg", alertMsg);
+
+        if(region == '제주도'){
+            //도서지역 배송비 추가
+            const addDelyFee = 2000;
+            let alertMsg2 = '도서지역';
+
+            console.log("addDelyFee const: ", addDelyFee, "alertMsg2 let: ", alertMsg2);
+            
+        }
+
+        //console.log("addDelyFee const: ", addDelyFee); //에러발생 const와 let은 블록스코프 내에서 선언이 된다면 내에서만 사용가능하다.
+        //console.log("alertMsg2 let: ", alertMsg2); //에러발생
+        
+
+    </script>
+
+</body>
+</html>

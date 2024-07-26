@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>템플릿 문자열 문법실습</h1>
+
+    <script>
+
+
+        const userName = "노윤석";
+        const age = 20;
+        let address = '청주시';
+        
+        let introduction = '저를 소개합니다. ' + userName + '님의 나이는 ' + age + '세 입니다. 주소는 ' + address + '입니다.';
+        
+        
+        console.log('올드한 방식은 문자열 변수조합 :',introduction);
+
+        
+        //ES6(ES2015)에서 추가된 템플릿 문자열 문법을 사용해봅시다.
+        //백틱(`)을 이용해 문자열을 감싸고 ${변수명}을 이용해 변수값을 삽입할 수 있습니다.
+        //훨씬 가독성도 좋고 편리하다.
+
+        let newIntroduction = `저를 소개합니다. ${userName}님의 나이는 ${age}세 입니다. 주소는 ${address}입니다.`
+
+        console.log('템플릿문자열 기법을 이용한 변수/문자열조합 : ',newIntroduction);
+
+
+    </script>
+</body>
+</html>
