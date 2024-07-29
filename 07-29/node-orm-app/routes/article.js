@@ -38,7 +38,7 @@ router.post('/modify', async(req,res,next)=>{
 router.get('/delete', async(req,res,next)=>{
     //기존 게시글 삭제처리 후
     //목록페이지로 이동
-    res.redirect('/article/list');
+    res.redirect('article/list');
 });
 
 
