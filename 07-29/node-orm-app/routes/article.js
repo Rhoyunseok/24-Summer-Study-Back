@@ -45,7 +45,7 @@ router.get('/delete', async(req,res,next)=>{
 //기존 단일게시글 정보 조회 확인 웹페이지요청과 응답처리 라우팅메소드
 router.get('/modify/:id', async(req,res,next)=>{
     //db에서 해당 게시글 번호와 일치하는 단일게시글 정보조회
-    res.render('article/modify/:id');
+    res.render('article/modify');
 });
 
 
