@@ -26,7 +26,8 @@ db.sequelize = sequelize; //DB연결정보를포함한DB제어객체속성(CRUD)
 db.Sequelize = Sequelize; //Sequelize팩키지에서제공하는각종데이터타입및관련객체정보를제공함
 
 //회원모델모듈파일참조하고db속성정의하기
-//db.Member= require('./member.js')(sequelize,Sequelize);
-
+db.Member= require('./member.js')(sequelize,Sequelize);
+//게시글모델모듈파일참조하고db속성정의하기
+db.Article= require('./article.js')(sequelize,Sequelize);
 //db객체외부로노출하기
 module.exports = db;
