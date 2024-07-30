@@ -93,7 +93,7 @@ router.post('/modify', async(req,res,next)=>{
 //기존 단일 게시글 삭제처리 요청과 응답처리 라우팅메소드
 router.get('/delete', async(req,res,next)=>{
     //step1 : 삭제할 게시글 고유번호 추출하기
-    const articleIdx = req.query.article_id;
+    const articleIdx = req.query.id;
 
     //step2 : 게시글 고유번호와 일치하는 게시글을 삭제처리한다.
     const deletedCnt = await db.Article.destroy({
