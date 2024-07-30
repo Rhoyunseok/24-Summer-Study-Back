@@ -3,8 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+ //환경변수를 사용하기위해 .env파일을 읽어들인다.
+require('dotenv').config();
 var expressLayouts = require('express-ejs-layouts');
+
+
+//ORM DB연결객체 sequelize정보가져오기
+var sequelize = require('./models/index.js').sequelize;
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -12,6 +17,8 @@ var adminRouter = require('./routes/admin');
 var articleRouter = require('./routes/article');
 
 var app = express();
+
+sequelize.sync(); //DB연결정보를통해DB동기화처리하기
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
