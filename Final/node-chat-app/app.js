@@ -4,11 +4,26 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+//RESTful API 서비스 CORS 이슈해결을 위한 cors 패키지 참조하기
+const cors = require("cors");
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var adminRouter = require('./routes/admin');
 
 var app = express();
+
+//모든 웹사이트/모바일 프론트에서 RESTAPI를 접근할수 있게 허락함
+app.use(cors());
+
+
+//특정 도메인주소만 허가
+// app.use(
+//   cors({
+//     methods: ["GET", "POST", "DELETE", "OPTIONS"],
+//     origin: ["http://localhost:3000", "https://naver.com"],
+//   })
+// );
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,7 +37,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
