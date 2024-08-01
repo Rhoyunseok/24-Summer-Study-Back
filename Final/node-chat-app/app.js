@@ -1,8 +1,12 @@
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
+ //환경변수를 위한 dotenv 패키지 참조하기
+require('dotenv').config();
 
 //시퀄라이즈 ORM 이용해 DB서버와 연결작업
 var sequelize= require('./models/index.js').sequelize;

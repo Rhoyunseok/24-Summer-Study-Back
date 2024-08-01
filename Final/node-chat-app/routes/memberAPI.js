@@ -9,6 +9,9 @@ var router = express.Router();
 //사용자 암호 단방향 암호화 적용을 위한 모듈
 var bcrypt = require('bcryptjs');
 
+//JWT토큰 생성 및 인증을 위한 모듈
+const jwt= require('jsonwebtoken');
+
 var db=require('../models/index');
 
 /*
@@ -107,14 +110,25 @@ router.post('/login', async(req,res,next)=>{
         if(member){
             //동일 메일주소가 존재하는 경우
             //step3 : 사용자 암호를 체크합니다.
-            if(bcrypt.compare(password,member.member_password)){
+            const compareResult = await bcrypt.compare(password,member.member_password);
+            if(compareResult){
                 //암호가 일치하는 경우
                 //step4 : 사용자 메일주소/암호가 일치하는 경우 현재 로그인 사용자의 주요정보를 JSON데이터로 생성합니다.
-                
+                const tokenJsonData = {
+                    member_id:member.member_id,
+                    email:member.email,
+                    name:member.name,
+                    profile_img_path:member.profile_img_path,
+                };
 
                 //step5 : 인증된 사용자 JSON데이터를 JWT토큰내에 담아 JWT토큰문자열을 생성합니다.
+                //jwt.sign('토큰내에담을데이터','JWT토큰생성시사용할비밀키문자열','토큰만료시간설정',발급자);
+                const token = await jwt.sign(tokenJsonData,process.env.JWT_AUTH_KEY,{expiresIn:'24h',issuer:"CBNU"});
 
                 //step6 : JWT 토큰 문자열을 프론트엔드로 반환합니다.            
+                apiResult.code=200;
+                apiResult.data=token;
+                apiResult.msg="로그인 성공";
             }else{
                 //암호가 불일치하는 경우
                 apiResult.code=400;
