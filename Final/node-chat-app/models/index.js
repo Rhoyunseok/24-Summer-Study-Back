@@ -18,6 +18,14 @@ const sequelize= new Sequelize(config.database,config.username,config.password,c
 db.sequelize= sequelize; //DB연결정보를포함한DB제어객체속성(CRUD)
 
 db.Sequelize= Sequelize; //Sequelize팩키지에서제공하는각종데이터타입및관련객체정보를제공함
+
 //회원모델모듈파일참조하고db속성정의하기
-//db.Member= require('./member.js')(sequelize,Sequelize);
+db.Member= require('./member.js')(sequelize,Sequelize);
+db.Article= require('./article.js')(sequelize,Sequelize);
+db.ArticleFile= require('./article_file.js')(sequelize,Sequelize);
+db.ChannelMember= require('./channel_member.js')(sequelize,Sequelize);
+db.Channel= require('./channel.js')(sequelize,Sequelize);
+db.ChannelMsg= require('./channel_msg.js')(sequelize,Sequelize);
+
 //db객체외부로노출하기
+module.exports=db;
