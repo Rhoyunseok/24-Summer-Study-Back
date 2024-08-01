@@ -4,13 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+//시퀄라이즈 ORM 이용해 DB서버와 연결작업
+var sequelize= require('./models/index.js').sequelize;
+
 //RESTful API 서비스 CORS 이슈해결을 위한 cors 패키지 참조하기
+//CORS 이슈란 다른 도메인에서 RESTful API 서비스를 호출할때 발생하는 이슈
 const cors = require("cors");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+sequelize.sync(); //DB서버와 연결작업
 
 //모든 웹사이트/모바일 프론트에서 RESTAPI를 접근할수 있게 허락함
 app.use(cors());
