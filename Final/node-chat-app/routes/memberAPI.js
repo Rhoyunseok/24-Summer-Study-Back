@@ -6,6 +6,9 @@
 var express = require('express');
 var router = express.Router();
 
+//사용자 암호 단방향 암호화 적용을 위한 모듈
+var bcrypt = require('bcryptjs');
+
 var db=require('../models/index');
 
 /*
@@ -31,12 +34,16 @@ router.post('/entry',async(req,res,next)=>{
         const email=req.body.email;
         const password=req.body.password;
         const name=req.body.name;
-        //Step2 : member 회원테이블에 데이터를 등록한다.
+
+        //사용자암호를 단방향 암호화 문자열로 변환하기
+        const encryptedPassword = await bcrypt.hash(password,12); //암호화처리
+
+
         //등록할 데이터의 구조(속성명)은 member모델의 속성명을 기준으로 한다.
         
         const member = {
             email:email,
-            member_password:password,
+            member_password:encryptedPassword,
             name:name,
             profile_img_path:"/img/user.png",
             entry_type_code:0,
@@ -57,7 +64,7 @@ router.post('/entry',async(req,res,next)=>{
         apiResult.data=registedMember;
         apiResult.msg="회원가입 완료";
     }catch(err){
-        console.log("/api/member/entry 호출에러 발생 : ",err.message);
+        console.log("/api/member/entry 호출에러 발생 : ",err.message); //자동생성 에러메시지
 
 
         //중요 : 백엔드의 구체적인 에러내용을 프론트엔드로 전송하는 것은 바로 사직서를 쓰는 것과 동일하다.
@@ -71,6 +78,66 @@ router.post('/entry',async(req,res,next)=>{
     
 
 res.json(apiResult);
+});
+
+/*
+- 회원 로그인 데이터 처리 요청과 응답 라우팅메소드
+- 호출주소: http://localhost:5000/api/member/login
+- 호출방식: Post
+**중요** 클라이언트 호출하는 주소와 후출방식이 일치해야 해당 라우팅메소드가 실행됩니다.
+**응답결과** 사용자 메일/암호를 체크하고 JWT토큰을 발행하여 프론트엔드에 전달
+*/
+router.post('/login', async(req,res,next)=>{
+    let apiResult={
+        code:400,
+        data:null,
+        msg:""
+    };
+
+    try{
+        //step1 : 로그인 사용자의 메일주소/암호를 추출합니다.
+        const email = req.body.email;
+        const password = req.body.password;
+
+        //step2 : 사용자 메일주소 존재여부를 체크합니다.
+        const member = await db.Member.findOne({
+            where:{email:email}
+        });
+
+        if(member){
+            //동일 메일주소가 존재하는 경우
+            //step3 : 사용자 암호를 체크합니다.
+            if(bcrypt.compare(password,member.member_password)){
+                //암호가 일치하는 경우
+                //step4 : 사용자 메일주소/암호가 일치하는 경우 현재 로그인 사용자의 주요정보를 JSON데이터로 생성합니다.
+                
+
+                //step5 : 인증된 사용자 JSON데이터를 JWT토큰내에 담아 JWT토큰문자열을 생성합니다.
+
+                //step6 : JWT 토큰 문자열을 프론트엔드로 반환합니다.            
+            }else{
+                //암호가 불일치하는 경우
+                apiResult.code=400;
+                apiResult.data=null;
+                apiResult.msg="암호가 일치하지 않습니다.";
+            }
+            
+
+
+        }else{
+            //동일 메일주소가 존재하지 않는 경우 프론트엔드로 겨로가값 바로 반환
+            apiResult.code=400;
+            apiResult.data=null;
+            apiResult.msg="등록된 회원정보가 없습니다.";
+        }
+
+
+
+    }catch(err){
+
+    }
+
+    res.json(apiResult);
 });
 
 
