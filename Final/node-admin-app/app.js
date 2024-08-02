@@ -7,6 +7,8 @@ var logger = require('morgan');
 require('dotenv').config();
 var expressLayouts = require('express-ejs-layouts');
 
+var session = require('express-session');
+
 
 //ORM DB연결객체 sequelize정보가져오기
 var sequelize = require('./models/index.js').sequelize;
@@ -19,6 +21,20 @@ var articleRouter = require('./routes/article');
 var app = express();
 
 sequelize.sync(); //DB연결정보를통해DB동기화처리하기
+
+//백엔드 앱에서 세션을 사용할 수 있게 설정하기
+app.use(
+  session({
+    resave: false, //매번 세션을 새로 생성하지 않는다.
+    saveUninitialized: true, //비어있는 세션도 저장할지 여부
+    secret: "testsecret",  //세션을 만들 때 사용하는 암호화 키값
+    cookie: {
+      httpOnly: true, //http지원여부
+      secure: false, //http환경에서만 세션 정보를 주고받도록 처리할지 여부
+      maxAge:1000 * 60 * 5 //5분동안 서버세션을 유지하겠다.(1000은 1초)
+      },
+  }),
+);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
