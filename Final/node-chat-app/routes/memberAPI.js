@@ -133,7 +133,7 @@ router.post('/login', async(req,res,next)=>{
                 //암호가 불일치하는 경우
                 apiResult.code=400;
                 apiResult.data=null;
-                apiResult.msg="암호가 일치하지 않습니다.";
+                apiResult.msg="InCorrectPasword";
             }
             
 
@@ -142,7 +142,7 @@ router.post('/login', async(req,res,next)=>{
             //동일 메일주소가 존재하지 않는 경우 프론트엔드로 겨로가값 바로 반환
             apiResult.code=400;
             apiResult.data=null;
-            apiResult.msg="등록된 회원정보가 없습니다.";
+            apiResult.msg="NotExistEmail";
         }
 
 
@@ -154,6 +154,48 @@ router.post('/login', async(req,res,next)=>{
     res.json(apiResult);
 });
 
+/*
+-회원 로그인 데이터 처리 요청과 응답 라우팅메소드
+-호출주소: http://localhost:5000/api/member/profile
+-호출방식: Get
+-응답결과: 프론트엔드에서 제공한 JWT토큰을 검증하고 토큰내에 담긴 사용자정보를 반환
+*/
+router.get('/profile',async(req,res,next)=>{
+
+    let apiResult={
+        code:400,
+        data:null,
+        msg:""
+    };
+
+    try{
+        //step1 : 웹브라우저에서 JWT토큰 값을 추출한다.
+        //웹브라우저에서 전달되는 토큰값 예시 : 
+        var token = req.headers.authorization.split('Bearer ')[1];
+        
+        //step2 : JWT토큰 문자열 내에서 인증사용자 JSON 데이터를 추출한다.
+        //jwt.verify('검증할토큰문자열','JWT토큰생성시사용한비밀키문자열');
+        var loginMemberData = await jwt.verify(token,process.env.JWT_AUTH_KEY)
+
+        //step3 : 토큰 페이로드 영역에서 추출한 현재 로그인 사용자 고유번호를 기준으로 DB에서 단일사용자 조회
+        var dbmember = await db.Member.findOne({
+            where:{member_id : loginMemberData.member_id}
+        });
+
+        dbmember.member_password=""; //보안상 비밀번호는 프론트엔드에 전송하지 않는다.
+        
+        //step4 : 단일 사용자 정보를 프론트엔드로 전달한다.
+        apiResult.code=200;
+        apiResult.data=dbmember;
+        apiResult.msg="OK";
+
+    }catch{
+
+    }
+    
+
+    res.json(apiResult);
+});
 
 
 
