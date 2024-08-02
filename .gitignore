@@ -18,3 +18,5 @@ Final/node-admin-app/config/config.json
 Final/node-chat-app/node_modules
 Final/node-chat-app/config/config.json
 Final/node-chat-app/.env
+
+Final\node-admin-app\public\upload

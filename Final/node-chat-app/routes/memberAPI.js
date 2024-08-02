@@ -14,6 +14,21 @@ const jwt= require('jsonwebtoken');
 
 var db=require('../models/index');
 
+var multer = require('multer');
+
+//파일저장위치 지정
+var storage = multer.diskStorage({
+    destination(req, file, cb) {
+    cb(null, 'public/upload/');
+    },
+    filename(req, file, cb) {
+    cb(null, `${Date.now()}__${file.originalname}`);
+    },
+    });
+
+var upload = multer({ storage: storage });
+
+
 /*
 - 신규 회원정보 등록처리 요청과 응답 라우팅메소드
 - 호출주소: http://localhost:5000/api/member/entry
@@ -197,7 +212,48 @@ router.get('/profile',async(req,res,next)=>{
     res.json(apiResult);
 });
 
+/*
+-사용자 프로필 사진 업로드 및 정보 처리 라우팅 메소드
+-호출주소: http://localhost:5000/api/member/profile/upload
+- 호출방식: Post
+-응답결과: 프론트엔드에서 첨부한 이미지 파일을 업로드 처리하고 업로드된 정보를 반환한다.
+*/
+router.post('/profile/upload',upload.single('file'),async(req,res,next)=>{
 
+    let apiResult={
+        code:400,
+        data:null,
+        msg:""
+    };
+
+    try{
+
+        //step1 : 업로드된 파일 정보 추출하기
+        const uploadFile = req.file;
+        //step2 : 업로드된 파일정보 반환하기
+        const filePath = '/upload/${uploadFile.filename}';
+        const fileName = uploadFile.originalname;
+        const fileSize = uploadFile.size;
+        const mimeType = uploadFile.mimetype;
+
+        const file = {
+            filePath,
+            fileName,
+            fileSize,
+            mimeType,
+        };
+        //step3 : 업로드된 
+        apiResult.code=200;
+        apiResult.data=file;
+        apiResult.msg="OK";
+    }catch(err){
+        apiResult.code=500;
+        apiResult.data=null;
+        apiResult.msg="Failed";
+    }
+
+    res.json(apiResult);
+});
 
 
 module.exports = router;

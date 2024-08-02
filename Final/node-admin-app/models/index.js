@@ -24,7 +24,6 @@ db.Admin = require('./admin.js')(sequelize,Sequelize);
 
 //게시글 모델 모듈파일 참조하고 db 동적 속성 정의하기
 db.Article = require('./article.js')(sequelize,Sequelize);
-
-
+db.ArticleFile = require('./article_file.js')(sequelize,Sequelize);
 //db객체 외부로 노출하기
 module.exports = db;
