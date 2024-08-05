@@ -26,7 +26,7 @@ const {isLoggined} = require('./sessionMiddleware.js');
 - 요청방식: Get
 - 응답결과: 관리자계정 목록 조회 웹페이지(뷰+Data) 반환
 */
-router.get('/list',isLoggined,async(req, res, next)=>{
+router.get('/list',async(req, res, next)=>{
 
     //관리자 목록조회 조회옵션 데이터 정의 =ViewModel
     const searchOption = {
@@ -147,7 +147,7 @@ router.post('/list',isLoggined,async(req,res)=>{
 - 요청방식: Get
 - 응답결과: 신규 관리자 계정 등록 웹페이지(뷰) 반환
 */
-router.get('/create', isLoggined,async(req, res, next)=> {
+router.get('/create',async(req, res, next)=> {
     res.render('admin/create');
 });
 
@@ -158,7 +158,7 @@ router.get('/create', isLoggined,async(req, res, next)=> {
 - 요청방식: Post
 - 응답결과: 신규 관리자 계정 등록 후 목록 페이지 이동
 */
-router.post('/create',isLoggined, async(req, res, next)=> {
+router.post('/create', async(req, res, next)=> {
 
     //Step1: 신규 관리자 정보 추출하기
     const admin_id = req.body.admin_id;
@@ -178,7 +178,9 @@ router.post('/create',isLoggined, async(req, res, next)=> {
     //신규 데이터 등록시 모델의 속성중 NotNull(allowNull:false)인 속성값은 반드시 값을 등록해야합니다.
 
     //현재 로그인한 사용자의 관리자 고유번호 추출하기 - 세션을 이용해서
-    const loginAdminId = req.session.loginUser.admin_member_id;
+    // const loginAdminId = req.session.loginUser.admin_member_id;
+    const loginAdminId = 1;
+
     
     const admin = {
         company_code,

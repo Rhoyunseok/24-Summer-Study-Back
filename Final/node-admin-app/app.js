@@ -74,4 +74,9 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+
+//노드앱 was 서비스 포트
+app.set("port", process.env.PORT || 5001);
+
+//노드앱이 작동되는 서버 객체 생성
+var server = app.listen(app.get("port"), function () {});

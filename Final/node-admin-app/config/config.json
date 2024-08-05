@@ -3,7 +3,7 @@
     "username": "root",
     "password": "Sanelove13!",
     "database": "edu_community",
-    "host": "127.0.0.1",
+    "host": "223.130.152.82",
     "dialect": "mysql",
     "timezone": "+09:00"
   },
@@ -19,7 +19,7 @@
     "username": "root",
     "password": "Sanelove13!",
     "database": "edu_community",
-    "host": "127.0.0.1",
+    "host": "223.130.152.82",
     "dialect": "mysql",
     "timezone": "+09:00"
   }
