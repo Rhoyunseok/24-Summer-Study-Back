@@ -129,7 +129,7 @@
 
 				//Step3: UI요소에서 추출한 JSON데이터를 백엔드 RESTFul API에 전달해서 회원가입처리합니다.
 				//Jquery의 AJAX를 이용해 post방식으로 백엔드 API주소에 데이터를 전달한다.
-				$.post('http://localhost:5000/api/member/login',member).done(function(result){
+				$.post('http://cbnu07.wechatmaker.com/api/member/login',member).done(function(result){
 					//백엔드에서의 처리결과값 확인하기 
 					console.log("백엔드에서의 처리결과값 확인하기:",result);
 

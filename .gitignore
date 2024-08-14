@@ -20,3 +20,5 @@ Final/node-chat-app/config/config.json
 Final/node-chat-app/.env
 
 Final\node-admin-app\public\upload
+
+node-sample-app/node_modules
