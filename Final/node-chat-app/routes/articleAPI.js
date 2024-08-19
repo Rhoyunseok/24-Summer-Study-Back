@@ -31,6 +31,97 @@ router.get("/list", async (req, res, next) => {
 });
 
 /*
+- 신규 게시글 등록 요청 및 응답처리 API 라우팅 메소드
+- 호출주소: http://localhost:5000/api/article/create
+- 호출방식: Post
+- 응답결과: 등록된 단일 게시글 데이터 반환
+*/
+router.post("/create", async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+  try {
+    //step1 : 프론트엔드에서 전달한 데이터 추출하기
+    const title = req.body.title;
+    const contents = req.body.contents;
+    const display = req.body.display;
+    const uploadFile = req.body.uploadFile;
+
+    //step2 : DB article 테이블에 저장할 JSON 데이터 생성하기
+    //Article 모델의 속성명과 데이터 속성명을 동일하게 작성해야한다.
+    const article = {
+      board_type_code: 2,
+      title: title,
+      article_type_code: 0,
+      contents: contents,
+      view_count: 0,
+      // ip_address: req.ip, //headers["x-forwarded-for"]
+      ip_address:
+        req.headers["x-forwarded-for"] || req.connection.remoteAddress,
+      is_display_code: display,
+      reg_date: new Date(),
+      reg_member_id: 1,
+    };
+
+    //step3 : DB article 테이블에 데이터 저장하기
+    const registedArticle = await db.Article.create(article);
+
+    //step4: 처리결과값  프론트엔드 반환
+    apiResult.code = 200;
+    apiResult.data = registedArticle;
+    apiResult.msg = "게시글 등록 완료";
+  } catch (err) {
+    apiResult.code = 500;
+    apiResult.data = null;
+    apiResult.msg = "백엔드 서버 에러입니다.";
+  }
+  res.json(apiResult);
+});
+
+/*
+- 기존 게시글 삭제 요청 및 응답처리 API 라우팅 메소드
+- 호출주소: http://localhost:5000/api/article/delete
+- 호출방식: Get
+- 응답결과: 삭제된 단일 게시글 데이터 반환
+*/
+router.get("/delete", async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+  try {
+  } catch (err) {
+    apiResult.code = 500;
+    apiResult.data = null;
+    apiResult.msg = "백엔드 서버 에러입니다.";
+  }
+  res.json(apiResult);
+});
+/*
+- 기존 게시글 수정 요청 및 응답처리 API 라우팅 메소드
+- 호출주소: http://localhost:5000/api/article/modify/1
+- 호출방식: Post
+- 응답결과: 수정된 단일 게시글 데이터 반환
+*/
+router.post("/modify/:id", async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+  try {
+  } catch (err) {
+    apiResult.code = 500;
+    apiResult.data = null;
+    apiResult.msg = "백엔드 서버 에러입니다.";
+  }
+  res.json(apiResult);
+});
+
+/*
 - 단일 게시글 목록 조회 요청 및 응답처리 API 라우팅 메소드
 - 호출주소: http://localhost:5000/api/article/1
 - 호출방식: Get
