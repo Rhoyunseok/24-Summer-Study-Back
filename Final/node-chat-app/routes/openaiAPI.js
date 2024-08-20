@@ -1,6 +1,12 @@
 var express = require("express");
 var router = express.Router();
 
+//ORM객체 //db객체 참조하기
+var db = require("../models/index");
+
+var sequelize = db.sequelize;
+const { QueryTypes } = sequelize;
+
 //OpenAI API 호출을 위한 axios 패키지 참조하기
 const axios = require("axios");
 
@@ -49,7 +55,7 @@ router.post("/dalle", async (req, res) => {
 
     //이미지 경로를 이용해 물리적 이미지 파일 생성하기
     const imgFileName = `sample-${Date.now()}.png`;
-    const imgFilePath = `./public/images/dalle/${imgFileName}`;
+    const imgFilePath = `./public/ai/${imgFileName}`;
     axios({
       url: imageURL,
       responseType: "stream",
@@ -69,11 +75,39 @@ router.post("/dalle", async (req, res) => {
       });
 
     //Step4: 최종 생성된 이미지 데이터 추출하기
+    const article = {
+      board_type_code: 3,
+      title: model,
+      contents: prompt,
+      article_type_code: 0,
+      view_count: 0,
+      ip_address: req.ip,
+      //ip_address: req.headers["x-forwarded-for"] || req.connection.remoteAddress,
+      is_display_code: 1,
+      reg_date: Date.now(),
+      reg_member_id: 1, //추후 jwt토큰에서 사용자 고유번호 추출하여 처리
+    };
+
+    const registedArticle = await db.Article.create(article);
+    const imageFullPath = `${process.env.DALLE_IMG_DOMAIN}/ai/${imgFileName}`;
+    //생성된 이미지 정보 만들고 저장하기
+    const articleFile = {
+      article_id: registedArticle.article_id,
+      file_name: imgFileName,
+      file_size: 0,
+      //   file_path: `${process.env.DALLE_IMG_DOMAIN}/ai/${imgFileName}`, //도메인주소를 포함한 백엔드 이미지 전체 url 경로
+      file_path: imageFullPath,
+      file_type: "PNG",
+      reg_date: Date.now(),
+      reg_member_id: 1, //추후 jwt토큰에서 사용자 고유번호 추출하여 처리
+    };
+
     //Step5: DB 게시글 테이블에 사용자 이미지 생성요청 정보 등록처리하기
+    await db.ArticleFile.create(articleFile);
     //Step6: 최종 생성된 이미지 정보를 프론트엔드로 반환하기
 
     apiResult.code = 200;
-    apiResult.data = imageURL;
+    apiResult.data = imgFilePath;
     apiResult.msg = "Ok";
   } catch (err) {
     apiResult.code = 500;
@@ -85,4 +119,43 @@ router.post("/dalle", async (req, res) => {
   res.json(apiResult);
 });
 
+/*
+-기 생성된 이미지 목록정보 조회 요청 및 응답처리 API 라우팅 메소드
+-호출주소: http://localhost:5000/api/openai/all
+-호출방식: GET
+-응답결과: 생성된 이미지 목록 JSON 데이터 반환
+*/
+router.get("/all", async (req, res) => {
+  let apiResult = {
+    code: 400,
+    data: null,
+    msg: "",
+  };
+  try {
+    const query = `SELECT 
+A.article_id,
+A.title,
+A.contents,
+A.reg_member_id,
+F.article_file_id as file_id,
+F.file_name,
+F.file_path,
+M.name as reg_member_name
+FROM article A INNER JOIN article_file F ON A.article_id = F.article_id 
+INNER JOIN member M ON A.reg_member_id = M.member_id;`;
+
+    const blogFiles = await sequelize.query(query, {
+      raw: true,
+      type: QueryTypes.SELECT,
+    });
+    apiResult.code = 200;
+    apiResult.data = blogFiles;
+    apiResult.msg = "Ok";
+  } catch (err) {
+    apiResult.code = 500;
+    apiResult.data = null;
+    apiResult.msg = "Server Error Failed";
+  }
+  res.json(apiResult);
+});
 module.exports = router;
