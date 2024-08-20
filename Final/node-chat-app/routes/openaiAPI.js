@@ -15,7 +15,7 @@ const openai = new OpenAI({
 
 /*
 -OpenAI Dalle.3 API를 호출하여 프론트엔드에서 제공한 프롬프트 기반 이미지 생성 API
--호출주소: http://localhost:5000/openai/dalle
+-호출주소: http://localhost:5000/api/openai/dalle
 -호출방식: POST
 -응답결과: 생성된 이미지 JSON 데이터 반환
 */
