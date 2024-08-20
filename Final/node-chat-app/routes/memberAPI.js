@@ -206,7 +206,11 @@ router.get("/profile", async (req, res, next) => {
     apiResult.code = 200;
     apiResult.data = dbmember;
     apiResult.msg = "OK";
-  } catch {}
+  } catch (err) {
+    apiResult.code = 500;
+    apiResult.data = null;
+    apiResult.msg = "Server Error";
+  }
 
   res.json(apiResult);
 });
@@ -231,7 +235,7 @@ router.post(
       //step1 : 업로드된 파일 정보 추출하기
       const uploadFile = req.file;
       //step2 : 업로드된 파일정보 반환하기
-      const filePath = "/upload/${uploadFile.filename}";
+      const filePath = `/upload/${uploadFile.filename}`;
       const fileName = uploadFile.originalname;
       const fileSize = uploadFile.size;
       const mimeType = uploadFile.mimetype;

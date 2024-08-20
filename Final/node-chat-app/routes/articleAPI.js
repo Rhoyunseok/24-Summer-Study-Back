@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-
+var jwt = require("jsonwebtoken");
 var db = require("../models/index");
 
 /*
@@ -43,11 +43,20 @@ router.post("/create", async (req, res) => {
     msg: "",
   };
   try {
+    //step0 : 프론트엔드에서 전달된 JWT토큰값에서 로그인 사용자 정보 추출하기
+    var token = req.headers.authorization.split("Bearer ")[1];
+    console.log("게시글 등록 API Token : ", token);
+
+    //사용자 토큰정보 유효성 검사 후 정상적이면 토큰내에 사용자 인증 json데이터를 반환합니다.
+    var loginMemberData = await jwt.verify(token, process.env.JWT_AUTH_KEY);
+
     //step1 : 프론트엔드에서 전달한 데이터 추출하기
     const title = req.body.title;
     const contents = req.body.contents;
     const display = req.body.display;
     const uploadFile = req.body.uploadFile;
+
+    //
 
     //step2 : DB article 테이블에 저장할 JSON 데이터 생성하기
     //Article 모델의 속성명과 데이터 속성명을 동일하게 작성해야한다.
@@ -61,8 +70,8 @@ router.post("/create", async (req, res) => {
       ip_address:
         req.headers["x-forwarded-for"] || req.connection.remoteAddress,
       is_display_code: display,
-      reg_date: new Date(),
-      reg_member_id: 1,
+      reg_date: Date.now(),
+      reg_member_id: loginMemberData.member_id, //토큰 내 사용자 인증 데이터에서 사용자 고유번호 추출
     };
 
     //step3 : DB article 테이블에 데이터 저장하기
@@ -75,7 +84,7 @@ router.post("/create", async (req, res) => {
   } catch (err) {
     apiResult.code = 500;
     apiResult.data = null;
-    apiResult.msg = "백엔드 서버 에러입니다.";
+    apiResult.msg = "백엔드 서버 에러입니다.111111111";
   }
   res.json(apiResult);
 });
@@ -96,7 +105,7 @@ router.get("/delete", async (req, res) => {
   } catch (err) {
     apiResult.code = 500;
     apiResult.data = null;
-    apiResult.msg = "백엔드 서버 에러입니다.";
+    apiResult.msg = "백엔드 서버 에러입니다.222222222222";
   }
   res.json(apiResult);
 });
@@ -116,7 +125,7 @@ router.post("/modify/:id", async (req, res) => {
   } catch (err) {
     apiResult.code = 500;
     apiResult.data = null;
-    apiResult.msg = "백엔드 서버 에러입니다.";
+    apiResult.msg = "백엔드 서버 에러입니다.33333333333333";
   }
   res.json(apiResult);
 });
