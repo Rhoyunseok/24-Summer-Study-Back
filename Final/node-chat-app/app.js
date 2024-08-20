@@ -21,6 +21,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var memberAPIRouter = require("./routes/memberAPI");
 var articleAPIRouter = require("./routes/articleAPI");
+var openaiAPIRouter = require("./routes/openaiAPI");
 
 var app = express();
 
@@ -51,7 +52,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/api/member", memberAPIRouter); //회원정보처리 API 라우터 등록
 app.use("/api/article", articleAPIRouter); //게시글정보처리 API 라우터 등록
-
+app.use("/api/openai", openaiAPIRouter); //OpenAI API 라우터 등록
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
