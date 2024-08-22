@@ -20,6 +20,7 @@ var usersRouter = require("./routes/users");
 var memberAPIRouter = require("./routes/memberAPI");
 var articleAPIRouter = require("./routes/articleAPI");
 var openaiAPIRouter = require("./routes/openaiAPI");
+var channelAPIRouter = require("./routes/channelAPI");
 
 var app = express();
 
@@ -54,6 +55,7 @@ app.use("/users", usersRouter);
 app.use("/api/member", memberAPIRouter);
 app.use("/api/article", articleAPIRouter);
 app.use("/api/openai", openaiAPIRouter);
+app.use("/api/channel", channelAPIRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

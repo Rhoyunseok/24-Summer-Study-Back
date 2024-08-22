@@ -154,7 +154,14 @@ router.post("/login", async (req, res, next) => {
 
         //step6 : JWT 토큰 문자열을 프론트엔드로 반환합니다.
         apiResult.code = 200;
-        apiResult.data = token;
+        apiResult.data = {
+          token: token,
+          member: {
+            member_id: tokenJsonData.member_id,
+            email: tokenJsonData.email,
+            name: tokenJsonData.name,
+          },
+        };
         apiResult.msg = "로그인 성공";
       } else {
         //암호가 불일치하는 경우
