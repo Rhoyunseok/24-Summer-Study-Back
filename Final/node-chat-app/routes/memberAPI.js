@@ -8,12 +8,12 @@ var router = express.Router();
 
 //사용자 암호 단방향 암호화 적용을 위한 모듈
 var bcrypt = require("bcryptjs");
-
 //JWT토큰 생성 및 인증을 위한 모듈
 const jwt = require("jsonwebtoken");
 
 var db = require("../models/index");
 
+//파일 업로드 처리를 위한 모듈
 var multer = require("multer");
 
 //파일저장위치 지정
